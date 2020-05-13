@@ -13,6 +13,14 @@
         </mat-slide-toggle>
       </div>
 
+      <section class="config-section ">
+        <blockstack-cfg></blockstack-cfg>
+        <hr>
+        <!--        <config-section (save)="saveGlobalCfg($event)"-->
+        <!--                        [cfg]="globalCfg[section.key]"-->
+        <!--                        [section]="section"></config-section>-->
+      </section>
+
       <section *ngFor="let section of globalConfigFormCfg; trackBy:trackBySectionKey;"
                class="config-section ">
         <config-section (save)="saveGlobalCfg($event)"
