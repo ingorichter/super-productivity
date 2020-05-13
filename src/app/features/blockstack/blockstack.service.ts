@@ -11,6 +11,17 @@ export class BlockstackService {
   us: UserSession = new UserSession({appConfig});
 
   constructor() {
+    console.log(this.us.isUserSignedIn());
+    if (this.us.isSignInPending()) {
+      this.us.handlePendingSignIn().then((userData) => {
+        // window.location = window.location.origin;
+      });
+    } else if (!this.us.isUserSignedIn()) {
+      this.signIn();
+    }
+
+
+    // this.signIn();
   }
 
   signIn() {
@@ -21,14 +32,25 @@ export class BlockstackService {
     this.us.signUserOut(window.location.origin);
   }
 
-  write() {
-    // const options = { encrypt: true };
-    // this.us.putFile(TASKS_FILENAME, JSON.stringify(tasks), options);
+  async write(key: string, data: any): Promise<any> {
+    if (!this.us.isUserSignedIn()) {
+      return false;
+    }
+
+    const options = {encrypt: true};
+    return this.us.putFile(key, JSON.stringify(data), options);
   }
 
-  read() {
-    // const options = { decrypt: true };
-    // this.props.userSession.getFile(TASKS_FILENAME, options)
+  async read(key: string): Promise<any> {
+    if (!this.us.isUserSignedIn()) {
+      return false;
+    }
+
+    const options = {decrypt: true};
+    const data = await this.us.getFile(key, options);
+    if (data) {
+      return JSON.parse(data.toString());
+    }
   }
 }
 

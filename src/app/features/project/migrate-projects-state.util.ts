@@ -28,11 +28,10 @@ export const migrateProjectState = (projectState: ProjectState): ProjectState =>
     projectEntities[key] = _removeOutdatedData(projectEntities[key]);
   });
 
-  // Update model version after all migrations ran successfully
-  projectState[MODEL_VERSION_KEY] = MODEL_VERSION;
   return {
     ...projectState,
     entities: projectEntities,
+    // Update model version after all migrations ran successfully
     [MODEL_VERSION_KEY]: MODEL_VERSION,
   };
 };
