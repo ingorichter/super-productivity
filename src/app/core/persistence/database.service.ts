@@ -5,7 +5,6 @@ import {DBSchema, openDB} from 'idb';
 import {IDBPDatabase} from 'idb/build/esm/entry';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, shareReplay, take} from 'rxjs/operators';
-import {BlockstackService} from '../../features/blockstack/blockstack.service';
 
 const DB_NAME = 'SUP';
 const DB_MAIN_NAME = 'SUP_STORE';
@@ -31,7 +30,6 @@ export class DatabaseService {
 
   constructor(
     private _snackService: SnackService,
-    private _blockstackService: BlockstackService,
   ) {
     this._init().then();
   }
@@ -39,7 +37,7 @@ export class DatabaseService {
   async load(key: string): Promise<any> {
     try {
       await this._afterReady();
-      return await this._blockstackService.read(key) || this.db.get(DB_MAIN_NAME, key);
+      return this.db.get(DB_MAIN_NAME, key);
     } catch (e) {
       this._snackService.open({type: 'ERROR', msg: T.GLOBAL_SNACK.ERR_DB_LOAD});
     }
@@ -48,7 +46,7 @@ export class DatabaseService {
   async save(key: string, data: any): Promise<any> {
     try {
       await this._afterReady();
-      return await this._blockstackService.write(key, data) || this.db.put(DB_MAIN_NAME, data, key);
+      return this.db.put(DB_MAIN_NAME, data, key);
     } catch (e) {
       this._snackService.open({type: 'ERROR', msg: T.GLOBAL_SNACK.ERR_DB_SAVE});
     }
